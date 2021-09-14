@@ -28,7 +28,7 @@ Eigen::MatrixXcf H_K(int Lx, int Ly, int Lz, double kx, double ky, double kz, do
         }
         if(Ly!=1){
           if(iy==0){
-            H_k(r,r+Lx*(Ly-1)-=ty1*std::exp(Ky);
+            H_k(r,r+Lx*(Ly-1))-=ty1*std::exp(Ky);
             H_k(r,r+Lx)-=ty1;
           }
           else if(iy==Ly-1){
@@ -42,7 +42,7 @@ Eigen::MatrixXcf H_K(int Lx, int Ly, int Lz, double kx, double ky, double kz, do
         }
         if(Lz!=1){
           if(mz==0){
-            H_k(r,r+Lx*Ly*(Lz-1)-=tz1*std::exp(Kz);
+            H_k(r,r+Lx*Ly*(Lz-1))-=tz1*std::exp(Kz);
             H_k(r,r+Lx*Ly)-=tz1;
           }
           else if(mz==Lz-1){
@@ -129,11 +129,11 @@ Eigen::MatrixXcf H_K(int Lx, int Ly, int Lz, double kx, double ky, double kz, do
 
 void initialization(int Lx, int Ly, int Lz, int N_up, int N_dn, int N_wlk, double deltau, double U, double kx, double ky, double kz, double tx1, double ty1, double tz1, double tz2, Eigen::MatrixXcf & H_k, Eigen::MatrixXcf & exp_hk, Eigen::MatrixXcf & Phi_T, std::vector<Eigen::MatrixXcf, Eigen::aligned_allocator<Eigen::MatrixXcf>> & Phi, Eigen::MatrixXd & o, Eigen::MatrixXd & w, Eigen::MatrixXd & aux_field, double fac_norm)
 {
-  int N_sites=Lx*Ly*Lz;
-  int N_par=N_up+n-dn;
+  const int N_sites=Lx*Ly*Lz;
+  int N_par=N_up+N_dn;
   H_k=H_K(Lx, Ly, Lz, kx, ky, kz, tx1, ty1, tz1, tz2);
   exp_hk=(-0.5*deltau*H_k).exp();
-  Eigen::EigenSolver<MatrixXcf> es(H_k);
+  Eigen::EigenSolver<Eigen::MatrixXcf> es(H_k);
   // Construct trial wave-functions
   Phi_T.block<N_sites,N_up>(0,0)=(es.eigenvectors()).block<N_sites,N_up>(0,0);
   Phi_T.block<N_sites,N_dn>(0,N_up+1)=(es.eigenvectors()).block<N_sites,N_dn>(0,0);
